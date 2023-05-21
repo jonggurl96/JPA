@@ -92,6 +92,12 @@ public class IdClass implements Serializable {
 > Entity로부터 테이블이 자동으로 생성되며 테스트를 위한 초기값은 [data.sql](src/main/resources/data/data.sql)에 스크립트로 저장하여 ddl이 수행되어 테이블이 생성된 후
 > 테스트용 데이터를 추가한다.
 
+## AttributeConverter
+> DB 타입과 클레스 필드 타입 매핑
+
+interface AttributeConverter<filedType, DBtype>을 구현한 클래스에 
+@Converter(autoApply = true) annotation을 달아준 후 메소드를 오버라이드하여 코드 작성
+[BigInt2LongConverter 소스코드](src/main/java/com/example/jpa/converter/BigInt2LongConverter.java)
 
 
 

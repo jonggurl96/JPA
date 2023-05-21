@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Getter
@@ -33,7 +34,7 @@ public class Contest {
     @Id
     private String name;
     
-    private long winAmnt;
+    private BigInteger winAmnt;
     
     @OneToMany(mappedBy = "contestName")
     private List<Participant> participants;
