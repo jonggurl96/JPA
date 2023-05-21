@@ -25,6 +25,33 @@ SQL
 - Spring Data JPA
 - PostgreSQL Driver
 
+#### application.properties
+- DDL
+  - spring.jpa.hibernate.ddl-auto
+    - none: 동작 안함
+    - create: 테이블 생성
+    - create-drop: 테이블 생성 후 종료 시 삭제
+    - update: 변경분만 반영(개발용)
+    - validate: 엔티티와 테이블이 정상적으로 매핑되었는지 확인(운영용)
+- dialect: DBMS 문법
+  - spring.jpa.properties.hibernate.dialect
+  - H2: org.hibernate.dialect.H2Dialect
+  - Oracle10g: org.hibernate.dialect.Oracle10gDialect
+  - MySQL: org.hibernate.dialect.MySQL5InnoDBDialect
+  - PostgreSQL: org.hibernate.dialect.PostgreSQLDialect
+- SQL Logging
+  - spring.jpa.show_sql: 모든 쿼리를 한 줄로 출력
+  - spring.jpa.properties.hibernate.format_sql: 출력되는 SQL 포맷팅
+    ![](github_resources/format_sql.png)
+  - spring.jpa.properties.hibernate.highlight_sql
+    ![](github_resources/highlight_sql.png)
+  - spring.jpa.properties.hibernate.use_sql_comments: 디버깅을 위한 주석 추가
+  - logging.level.org.hibernate.orm.jdbc.bind=trace: 바인딩되는 파라미터 출력
+    ![](github_resources/binding.png)
+- NamingStrategy
+  - default: 엔티티의 CamelCase를 DB 칼럼 매핑 시 Underscore로 변환
+  - jpa.hibernate.naming.physical-strategy = org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl: CamelCase를 그대로 사용
+
 ## Entity
 @Entity annotation으로 엔티티임을 명시
 
