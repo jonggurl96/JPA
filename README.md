@@ -6,10 +6,13 @@ User, Contest, Participant 세 개의 Entity를 이용해
 SpringBoot에서 JPA와 QueryDSL 사용
 > 웹페이지는 따로 구현하지 않고 Advanced REST Client 앱 사용
 
+### Tool
+- IntelliJ
+
 ### Spring Initializr
-Spring Boot 3.1.0
-Java SDK 17
-Gradle-groovy 프로젝트
+- Spring Boot 3.1.0
+- Java SDK 17
+- Gradle-groovy 프로젝트
 
 #### Dependencies
 Developer Tools
@@ -121,7 +124,7 @@ public class IdClass implements Serializable {
 > 테스트용 데이터를 추가한다.
 
 ## AttributeConverter
-> DB 타입과 클레스 필드 타입 매핑
+> DB 타입과 클레스 필드 타입 매핑 (집계 함수 결과 필드는 사용 불가)
 
 interface AttributeConverter<filedType, DBtype>을 구현한 클래스에 
 @Converter(autoApply = true) annotation을 달아준 후 메소드를 오버라이드하여 코드 작성
@@ -188,5 +191,78 @@ spring.data.web.pageable.one-indexed-parameters=true
   ![테스트 결과](github_resources/json_dto.png)
 
 ## QueryDSL
+### gradle
+> build.gradle
+- Querydsl Version 설정
+```groovy
+buildscript {
+    ext {
+        querydslVersion = "5.0.0"
+    }
+}
+```
+- querydsl 관련 명령어를 gradle 탭에 생성해주는 IntelliJ 플러그인
+```groovy
+plugins {
+  ...
+  id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+```
+- dependency 추가 및 jakarta.persistence를 사용하기 위한 annotation processor 등록
+```groovy
+dependencies {
+	implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+}
+```
+- QClass 생성 위치 지정
+```groovy
+def querydslDir = "$buildDir/generated/querydsl"
 
+querydsl {
+    jpa=true
+    querydslSourcesDir = querydslDir
+}
+```
+- 프로젝트 소스 디렉터리에 QClass 생성 위치 추가
+```groovy
+sourceSets {
+    main.java.srcDir querydslDir
+}
+```
+- annotationProcessor path 설정
+```groovy
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
 
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+```
+- clean 스크립트 실행 시 QClass 디렉토리 삭제
+```groovy
+clean.doLast {
+    file(querydslDir).deleteDir()
+}
+```
+### QClass
+> build.gradle을 이용해 빌드하면 빌드 디렉토리\generated/querydsl 폴더 안에 엔티티와 같은 패키지를 가진 QClass가 생성된다.
+![](github_resources/QUser.png)
+![](github_resources/QParticipant.png)
+> 주로 사용되는 타입으로는 NumberPath&lt;Integer&gt;, DatePath<java.time.LocalDate>, StringPath 등이 있다.
+
+### Projection
+> QueryDSL을 사용 시 Projection을 통해 원하는 DTO 타입으로 데이터를 지정할 수 있다.
+- Projections.*fields*: DTO의 모든 멤버의 순서에 맞게 작성
+- Projections.*constructor*: DTO의 생성자 파라미터 순서에 맞게 작성
+- Projections.*bean*: DTO의 기본 생성자와 Setter를 사용하기에 순서가 상관 없음.
+
+#### 사용법
+```java
+// 첫 번째 인자로는 DTO의 클래스 타입
+// 두 번째 인자부터 DTO의 멤버
+Projections.fields(DTO.class, ...)
+```
