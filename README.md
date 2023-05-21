@@ -4,6 +4,7 @@
 ## Intro
 User, Contest, Participant 세 개의 Entity를 이용해
 SpringBoot에서 JPA와 QueryDSL 사용
+> 웹페이지는 따로 구현하지 않고 Advanced REST Client 앱 사용
 
 ### Spring Initializr
 Spring Boot 3.1.0
@@ -99,6 +100,66 @@ interface AttributeConverter<filedType, DBtype>을 구현한 클래스에
 @Converter(autoApply = true) annotation을 달아준 후 메소드를 오버라이드하여 코드 작성
 [BigInt2LongConverter 소스코드](src/main/java/com/example/jpa/converter/BigInt2LongConverter.java)
 
+## JPARepository<Entity, ID>
+- Entity: @Entity를 적용한 클래스 타입
+- ID: Serializable을 구현한 클래스 타입 (primitive X)
+- > JPARepository는 @NoRepositoryBean이 적용된 interface로써,
+  > 이를 확장한 Repository 인터페이스를 작성한 후 서비스 단에서 @RequiredArgsConstructor를 통해 의존성을 주입한다.
+### 기본으로 제공하는 메서드들
+- save(entity): insert 또는 update
+- findById(id): pk로 Optional<Entity> 타입 값 하나 찾기
+- findAll(): List<Entity>로 전체 값 찾기
+- count(): long 타입으로 반환
+- delete(entity): entity와 같은 칼럼 삭제
+- etc...
+> 그 외 메소드들은 아래 명명 규칙에 맞게 작성한다.
+> 1. 메소드는 findBy 또는 countBy로 시작하며 칼럼 이름을 추가한다.
+> > 1. where 절과 order by 절을 추가할 수 있다.
+> > 2. 예시
+> > ```java
+> > public List<Contest> findByContestNameLike("국가어항");
+> > public List<Contest> fintByOrderByContestName();
+> > ```
+> 2. @Query annotation을 사용해 쿼리를 직접 코딩한다.
+> > 1. 위치 기반
+> > ```java
+> > @Query("select count(*) from jpa_user where age between ?1 and ?2")
+> > public long countByAgeRangeLoc(int minAge, int maxAge);
+> > ```
+> > 2. 이름 기반
+> > ```java
+> > @Query("select count(*) from jpa_user where age between :minAge and maxAge")
+> > public long countByAgeRangeNme(int minAge, int maxAge);
+> > ```
+### 페이징
+SpringBoot의 Pageable 객체를 사용하면 Page<Entity> 타입의 리턴값을 얻을 수 있다.
+이 리턴값에 getContent() 메서드를 통해 결과값을 사용할 수 있다.
+- application.properties
+```properties
+# 페이지 당 레코드 수
+spring.data.web.pageable.default-page-size=3
 
+# Pageable 객체를 zero-based에서 1부터 시작하도록 변경 
+spring.data.web.pageable.one-indexed-parameters=true
+```
+
+### 장점
+- 간단한 쿼리는 메서드 명으로 쉽게 파악할 수 있다.
+- 복잡한 쿼리는 직접 @Query annotation을 통해 작성할 수 있다.
+- 간단한 CRUD는 구현이 쉽거나 구현하지 않아도 된다.
+- 페이징이 용이하다.
+
+### 단점
+- 조회 결과가 Entity 타입이기 때문에 조인을 사용하기 어렵다.
+- 비슷한 쿼리를 작성할 때 재사용이 불가능하여 새로 작성해야 한다.
+- 지원하지 않는 메서드는 native query를 사용해야 한다.
+- 다른 엔티티 타입의 컬렉션을 포함한 엔티티의 경우 StackOverflow가 발생한다.
+  ![](github_resources/json_stackoverflow.png)
+  > 이를 방지하기 위해 DTO로 변환하여 사용한다.
+  - [JpaDtoConverter 코드](src/main/java/com/example/jpa/dto/converter/JpaDtoConverter.java)
+  - 테스트 결과 (Page 객체)
+  ![테스트 결과](github_resources/json_dto.png)
+
+## QueryDSL
 
 
