@@ -260,9 +260,16 @@ clean.doLast {
 - Projections.*constructor*: DTO의 생성자 파라미터 순서에 맞게 작성
 - Projections.*bean*: DTO의 기본 생성자와 Setter를 사용하기에 순서가 상관 없음.
 
-#### 사용법
+#### Usage
 ```java
 // 첫 번째 인자로는 DTO의 클래스 타입
 // 두 번째 인자부터 DTO의 멤버
 Projections.fields(DTO.class, ...)
 ```
+#### Alias
+> QClass의 모든 멤버 변수는 SimpleExpression의 as() 메서드를 상속받아 사용 가능함.
+> QueryDSL의 select 결과 칼럼들은 이름을 기준으로 리턴되는 클래스에 매핑됨.
+> 결과 칼럼과 필드 명이 다르거나 집계함수의 결과의 경우 자동으로 매핑되지 않으므로 alias를 지정해줘야 값을 읽어올 수 있음.
+
+##### Usage
+![](github_resources/alias.png)
