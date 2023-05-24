@@ -6,6 +6,7 @@ import com.example.jpa.dto.querydsl.ParticipantAvgAgeDto;
 import com.example.jpa.dto.querydsl.ParticipantCntDto;
 import com.example.jpa.dto.querydsl.ParticipantInfoDto;
 import com.example.jpa.service.querydsl.ParticipantQdslService;
+import com.example.jpa.sort.querydsl.QdslOrderSpecs;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -84,5 +85,27 @@ public class ParticipantQdslServiceImpl implements ParticipantQdslService {
     
     private OrderSpecifier<String> orderByName(QParticipant participant) {
         return participant.contestName.name.asc();
+    }
+    
+    /**
+     * @param pageable Sort 정보를 추가한 페이징 객체
+     * @return 공모전별 평균 나이 내림차순 정렬
+     * @throws Exception
+     */
+    @Override
+    public Page<ParticipantAvgAgeDto> getParticipantAvgAge(Pageable pageable,
+                                                           QdslOrderSpecs qdslOrderSpecs) throws Exception {
+        QParticipant participant = QParticipant.participant;
+    
+        List<ParticipantAvgAgeDto> content = qf.select(Projections.constructor(ParticipantAvgAgeDto.class,
+                        participant.contestName.name.as("contestName"),
+                        participant.participantDigit.age.avg().as("avgAge")))
+                .from(participant)
+                .groupBy(participant.contestName.name)
+                .orderBy(qdslOrderSpecs.toOrders(participant))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+        return new PageImpl<>(content, pageable, content.size());
     }
 }

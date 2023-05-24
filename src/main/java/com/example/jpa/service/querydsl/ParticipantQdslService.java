@@ -3,6 +3,7 @@ package com.example.jpa.service.querydsl;
 import com.example.jpa.dto.querydsl.ParticipantAvgAgeDto;
 import com.example.jpa.dto.querydsl.ParticipantCntDto;
 import com.example.jpa.dto.querydsl.ParticipantInfoDto;
+import com.example.jpa.sort.querydsl.QdslOrderSpecs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,4 +29,11 @@ public interface ParticipantQdslService {
      * @throws Exception
      */
     public List<ParticipantAvgAgeDto> getParticipantAvgAge() throws Exception;
+    
+    /**
+     * @param pageable Sort 정보를 추가한 페이징 객체
+     * @return 공모전별 평균 나이 내림차순 정렬
+     * @throws Exception
+     */
+    public Page<ParticipantAvgAgeDto> getParticipantAvgAge(Pageable pageable, QdslOrderSpecs qdslOrderSpecs) throws Exception;
 }

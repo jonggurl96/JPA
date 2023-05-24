@@ -14,19 +14,19 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderSpecs {
-    private List<String> directions;
+    protected List<String> directions;
     
-    private List<String> properties;
+    protected List<String> properties;
     
-    private List<Boolean> ignoreCases;
+    protected List<Boolean> ignoreCases;
     
-    private List<String> nullHandlings;
+    protected List<String> nullHandlings;
     
     public List<Sort.Order> toOrders() {
-        return properties.stream().map(m -> func(properties.indexOf(m))).collect(Collectors.toList());
+        return properties.stream().map(m -> toOrder(properties.indexOf(m))).collect(Collectors.toList());
     }
     
-    private Sort.Order func(int idx) {
+    private Sort.Order toOrder(int idx) {
         Sort.Direction direction = Sort.Direction.fromString(directions.get(idx));
         Sort.NullHandling nullHandling = switch(nullHandlings.get(idx)) {
             case "nullsFirst" -> Sort.NullHandling.NULLS_FIRST;
