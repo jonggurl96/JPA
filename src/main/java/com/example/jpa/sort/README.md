@@ -165,7 +165,39 @@ private <T extends Number & Comparable<?>> ComparableExpressionBase<?> aggregate
 ![](../../../../../../../github_resources/OrderSpecifier.png)
 > cEsprBase는 comparableExpressionBase()의 반환값
 
-
+## Usage
+### JSON parameter
+```json
+{
+  "directions": [
+    "desc"
+  ],
+  "properties": [
+    "participantDigit.age"
+  ],
+  "ignoreCases": [
+    true
+  ],
+  "nullHandlings": [
+    "native"
+  ],
+  "aggregations": [
+    "avg"
+  ],
+  "tables": [
+    "jpa_participant"
+  ]
+}
+```
+### Controller
+```java
+@PostMapping("avgAge/sorted")
+@ResponseBody
+public Page<ParticipantAvgAgeDto> getSortedAvgAge(@RequestBody QdslOrderSpecs qdslOrderSpecs,
+                                                  Pageable pageable) throws Exception {
+    return service.getParticipantAvgAge(pageable, qdslOrderSpecs);
+}
+```
 
 
 
