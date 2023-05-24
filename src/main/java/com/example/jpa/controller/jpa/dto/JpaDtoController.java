@@ -6,11 +6,15 @@ import com.example.jpa.dto.jpa.UserJpaDto;
 import com.example.jpa.service.jpa.dto.ContestDtoService;
 import com.example.jpa.service.jpa.dto.ParticipantDtoService;
 import com.example.jpa.service.jpa.dto.UserDtoService;
+import com.example.jpa.sort.OrderSpecs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -59,6 +63,15 @@ public class JpaDtoController {
     @PostMapping("participant/pageAll")
     @ResponseBody
     public Page<ParticipantJpaDto> getAllParticipants(Pageable pageable) throws Exception {
+        return participantDtoService.getAll(pageable);
+    }
+    
+    @PostMapping("participant/pageAll/sorted")
+    @ResponseBody
+    public Page<ParticipantJpaDto> getSortedParticipants(@RequestBody OrderSpecs orderSpecs) throws Exception {
+        
+        Pageable pageable = PageRequest.of(1, 4, Sort.by(orderSpecs.toOrders()));
+        
         return participantDtoService.getAll(pageable);
     }
 }
