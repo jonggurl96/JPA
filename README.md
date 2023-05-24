@@ -283,3 +283,6 @@ Projections.fields(DTO.class, ...)
 | 같은 쿼리를 재사용할 때마다 새로운 함수를 생성해야 함                   | 같은 쿼리는 메서드로 추출하여 재사용 가능함            |
 | 페이징 구현이 용이함                                      | 페이징 시 직접 Page 타입 객체를 생성해야 함         |
 | 지원하지 않는 메서드는 native query를 사용해야 함                | 대부분은 지원하나 from절 조인 등 불가능한 기능이 일부 있음 |
+
+# Sort
+- [동적 Sorting, Paging 구현](src/main/java/com/example/jpa/sort/README.md)
