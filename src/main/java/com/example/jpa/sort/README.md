@@ -198,7 +198,17 @@ public Page<ParticipantAvgAgeDto> getSortedAvgAge(@RequestBody QdslOrderSpecs qd
     return service.getParticipantAvgAge(pageable, qdslOrderSpecs);
 }
 ```
-
+### Service
+```java
+public Page<ParticipantAvgAgeDto> getParticipantAvgAge(Pageable pageable,
+                                                       QdslOrderSpecs qdslOrderSpecs) throws Exception {
+    QParticipant participant = QParticipant.participant;
+    query.orderBy(qdslOrderSpecs.toOrders(participant))
+        .limit(pageable.getPageSize())
+        .offset(pageable.getPageOffset())
+        .fetch();
+}
+```
 
 
 
