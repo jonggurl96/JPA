@@ -44,12 +44,12 @@ SQL
   - PostgreSQL: org.hibernate.dialect.PostgreSQLDialect
 - SQL Logging
   - spring.jpa.show_sql: 모든 쿼리를 한 줄로 출력
-  - spring.jpa.properties.hibernate.format_sql: 출력되는 SQL 포맷팅
+  - spring.jpa.properties.hibernate.format_sql: 출력되는 SQL 포맷팅   
     ![](github_resources/format_sql.png)
-  - spring.jpa.properties.hibernate.highlight_sql
+  - spring.jpa.properties.hibernate.highlight_sql   
     ![](github_resources/highlight_sql.png)
   - spring.jpa.properties.hibernate.use_sql_comments: 디버깅을 위한 주석 추가
-  - logging.level.org.hibernate.orm.jdbc.bind=trace: 바인딩되는 파라미터 출력
+  - logging.level.org.hibernate.orm.jdbc.bind=trace: 바인딩되는 파라미터 출력   
     ![](github_resources/binding.png)
 - NamingStrategy
   - default: 엔티티의 CamelCase를 DB 칼럼 매핑 시 Underscore로 변환
@@ -183,12 +183,12 @@ spring.data.web.pageable.one-indexed-parameters=true
 - 조회 결과가 Entity 타입이기 때문에 조인을 사용하기 어렵다.
 - 비슷한 쿼리를 작성할 때 재사용이 불가능하여 새로 작성해야 한다.
 - 지원하지 않는 메서드는 native query를 사용해야 한다.
-- 다른 엔티티 타입의 컬렉션을 포함한 엔티티의 경우 StackOverflow가 발생한다.
+- 다른 엔티티 타입의 컬렉션을 포함한 엔티티의 경우 StackOverflow가 발생한다.   
   ![](github_resources/json_stackoverflow.png)
   > 이를 방지하기 위해 DTO로 변환하여 사용한다.
   - [JpaDtoConverter 코드](src/main/java/com/example/jpa/dto/converter/JpaDtoConverter.java)
-  - 테스트 결과 (Page 객체)
-  ![테스트 결과](github_resources/json_dto.png)
+  - 테스트 결과 (Page 객체)   
+    ![테스트 결과](github_resources/json_dto.png)
 
 ## QueryDSL
 ### gradle
@@ -250,8 +250,8 @@ clean.doLast {
 ```
 ### QClass
 > build.gradle을 이용해 빌드하면 빌드 디렉토리\generated/querydsl 폴더 안에 엔티티와 같은 패키지를 가진 QClass가 생성된다.
-![](github_resources/QUser.png)
-![](github_resources/QParticipant.png)
+   ![](github_resources/QUser.png)
+   ![](github_resources/QParticipant.png)
 > 주로 사용되는 타입으로는 NumberPath&lt;Integer&gt;, DatePath<java.time.LocalDate>, StringPath 등이 있다.
 
 ### Projection
