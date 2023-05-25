@@ -1,8 +1,16 @@
 # 동적 Sorting, Paging 구현
 ## 목차
-- []()
-- []()
-- []()
+- [JPA](#jpa)
+  - [Usage-JPA](#usage-jpa)
+- [QueryDSL](#querydsl)
+  - [동작 순서](#동작-순서)
+    - [1. 테이블 명을 기준으로 property가 정의된 테이블과 엔티티 찾기](#1-테이블-명을-기준으로-property가-정의된-테이블과-엔티티-찾기)
+    - [2. 엔티티 클래스로부터 property의 클래스 타입 찾기](#2-엔티티-클래스로부터-property의-클래스-타입-찾기)
+    - [3. 엔티티와 property로부터 path qclassproperty를 구하기](#3-엔티티와-property로부터-path--qclassproperty--를-구하기)
+    - [4. 집계함수 적용하기](#4-집계함수-적용하기)
+    - [5. OrderSpecifier 객체 생성](#5-orderspecifier-객체-생성)
+  - [Usage-QueryDSL](#usage-querydsl)
+  - [TblCodec](#tblcodec)
 
 # JPA
 > OrderSpecs - Pageable 객체의 Sort 클래스를 활용
@@ -36,7 +44,7 @@ protected List<String> nullHandlings;
 - 각 속성을 리스트로 구분했으며 동일한 index의 속성끼리 모여 하나의 Order 객체를 만듦
 - [OrderSpecs.java toOrders() 참고](OrderSpecs.java)
 
-## Usage
+## Usage-JPA
 ### JSON parameter
 ```json
 {
@@ -97,7 +105,7 @@ private List<String> tables;
 - 동일한 index 값끼리 모여 OrderSpecifier 객체를 생성하고 이를 이용해 정렬
 
 ## 동작 순서
-### 1. 테이블 명을 기준으로 property가 정의된 테이블과 엔티티를 찾는다.
+### 1. 테이블 명을 기준으로 property가 정의된 테이블과 엔티티 찾기
 ```java
 /**
  * <p>
@@ -111,7 +119,7 @@ private List<String> tables;
 private BeanPath<?> findParent(List<BeanPath<?>> rootPaths,
                                 String tableName);
 ```
-### 2. 찾은 엔티티 클래스로부터 property의 클래스 타입을 구한다.
+### 2. 엔티티 클래스로부터 property의 클래스 타입 찾기
 ```java
 /**
  * QClass로부터 Entity 클래스를 찾고 property 명을 통해 필드 변수와 그 타입을 검색
@@ -122,7 +130,7 @@ private BeanPath<?> findParent(List<BeanPath<?>> rootPaths,
 private Class<?> propertyTypeFromEntity(Path<?> rootPath,
                                         String property);
 ```
-### 3. 엔티티와 property로부터 Path(QClass.property)를 구한다.
+### 3. 엔티티와 property로부터 Path(QClass.property)를 구하기
 ```java
 /**
  * 일반 표현식
@@ -142,7 +150,7 @@ private <T extends Number & Comparable<?>> NumberExpression<T> numberExpression(
     return Expressions.numberPath(propertyType, parent, property);
 }
 ```
-### 4. 집계함수가 있으면 해당 Path에 집계함수를 적용한다.
+### 4. 집계함수 적용하기
 ```java
 /**
  * {@code parent} 타입의 RootPath로부터
@@ -161,11 +169,11 @@ private <T extends Number & Comparable<?>> ComparableExpressionBase<?> aggregate
                                                                                  String aggr);
     
 ```
-### 5. NullHandling과 Order 객체를 이용해 OrderSpecifier 객체를 생성한다.
+### 5. OrderSpecifier 객체 생성
 ![](../../../../../../../github_resources/OrderSpecifier.png)
 > cEsprBase는 comparableExpressionBase()의 반환값
 
-## Usage
+## Usage-queryDSL
 ### JSON parameter
 ```json
 {
@@ -209,7 +217,8 @@ public Page<ParticipantAvgAgeDto> getParticipantAvgAge(Pageable pageable,
         .fetch();
 }
 ```
-
+## TblCodec
+> table 명을 그대로 가져다 쓰지말고 decodeOne(), encodeOne() 메서드를 수정해서 사용
 
 
 

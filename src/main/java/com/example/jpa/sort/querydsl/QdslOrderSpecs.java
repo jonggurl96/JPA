@@ -50,9 +50,9 @@ public class QdslOrderSpecs extends OrderSpecs {
         
         List<BeanPath<?>> rootPathList = List.of(rootPaths);
     
-        /**
-         * 정렬할 property들 별로 OrderSpecifier 객체를 만들고 배열로 반환
-         * QueryBase 객체의 orderBy(OrderSpecifier...)메서드 활용
+        /*
+          정렬할 property들 별로 OrderSpecifier 객체를 만들고 배열로 반환
+          QueryBase 객체의 orderBy(OrderSpecifier...)메서드 활용
          */
         return properties.stream().map(property -> {
             
@@ -115,8 +115,10 @@ public class QdslOrderSpecs extends OrderSpecs {
      * @return 찾은 테이블로부터 만들어진 QCLass 타입 또는 null
      */
     private BeanPath<?> findParent(List<BeanPath<?>> rootPaths, String tableName) {
-        Optional<BeanPath<?>> parent = rootPaths.stream().filter(rootPath -> Objects.equals(
-                rootPath.getType().getAnnotation(Table.class).name(), tableName)).findFirst();
+        Optional<BeanPath<?>> parent = rootPaths.stream().filter(rootPath -> {
+            return Objects.equals(
+                    rootPath.getType().getAnnotation(Table.class).name(), TblCodec.decodeOne(tableName));
+        }).findFirst();
         return parent.orElse(null);
     }
     
