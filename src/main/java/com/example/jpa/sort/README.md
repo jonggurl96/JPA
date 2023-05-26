@@ -220,6 +220,6 @@ public Page<ParticipantAvgAgeDto> getParticipantAvgAge(Pageable pageable,
 ## TblCodec
 > table 명을 그대로 가져다 쓰지말고 decodeOne(), encodeOne() 메서드를 수정해서 사용
 
-
+[말고 다른 방법으로 Sort하기](../qdslsort/README.md)
 
 
