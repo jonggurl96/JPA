@@ -13,6 +13,7 @@ public class QdslOrder {
     /**
      *
      * QdslOrder - 정렬할 alias와 direction 정의
+     * <p>aggrTag n, if aggregated property else a</p>
      *
      * @author jonggurl
      * @version 1.0.0
@@ -21,4 +22,6 @@ public class QdslOrder {
     private String kwrd;
     
     private String direction;
+    
+    private String aggrTag;
 }

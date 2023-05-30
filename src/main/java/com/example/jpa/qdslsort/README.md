@@ -38,3 +38,6 @@ public class SKD {
     private String direction;
 }
 ```
+
+집계함수는 n, 그 외는 a를 태그로 같이 주자
+
