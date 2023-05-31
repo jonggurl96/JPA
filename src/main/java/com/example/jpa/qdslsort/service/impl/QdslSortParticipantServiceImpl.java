@@ -1,8 +1,6 @@
 package com.example.jpa.qdslsort.service.impl;
 
-import com.example.jpa.domain.QContest;
-import com.example.jpa.domain.QParticipant;
-import com.example.jpa.domain.QUser;
+import com.example.jpa.domain.*;
 import com.example.jpa.dto.querydsl.ParticipantAvgAgeDto;
 import com.example.jpa.qdslsort.QdslSortStrategy;
 import com.example.jpa.qdslsort.service.QdslSortParticipantService;
@@ -35,17 +33,27 @@ public class QdslSortParticipantServiceImpl implements QdslSortParticipantServic
     @Override
     public Page<ParticipantAvgAgeDto> getSortedAvgAge(Pageable pageable, QdslSortStrategy qdslSortStrategy) throws Exception {
         QParticipant participant = QParticipant.participant;
-        QContest contest = QContest.contest;
-        QUser user = QUser.user;
+        
+        qdslSortStrategy.getOrders().forEach(order -> {
+            if(order.getKwrd().equalsIgnoreCase("avgage")) {
+                order.setType(Participant.class);
+                order.setTypeAlias("participant");
+                order.setKwrd("participantDigit.age");
+                order.setAggrTag("avg");
+            }
+            else {
+                order.setType(Participant.class);
+                order.setTypeAlias("participant");
+                order.setKwrd("contestName");
+            }
+        });
     
         List<ParticipantAvgAgeDto> content = qf.select(Projections.constructor(ParticipantAvgAgeDto.class,
-                        contest.name.as("contestName"),
-                        user.age.avg().as("avgAge")))
+                        participant.contestName.name.as("contestName"),
+                        participant.participantDigit.age.avg().as("avgAge")))
                 .from(participant)
-                .innerJoin(contest).on(contest.name.eq(participant.contestName.name))
-                .innerJoin(user).on(user.digits.eq(participant.participantDigit.digits))
-                .groupBy(contest.name)
-                .orderBy(qdslSortStrategy.getOrders())
+                .groupBy(participant.contestName.name)
+                .orderBy(qdslSortStrategy.toOrders())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();

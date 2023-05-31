@@ -1,19 +1,19 @@
 package com.example.jpa.qdslsort;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Setter
 public class QdslOrder {
     /**
      *
      * QdslOrder - 정렬할 alias와 direction 정의
-     * <p>aggrTag n, if aggregated property else a</p>
+     * <p>rootPath - Service에서 입력할 QClass</p>
      *
      * @author jonggurl
      * @version 1.0.0
@@ -22,6 +22,10 @@ public class QdslOrder {
     private String kwrd;
     
     private String direction;
+    
+    private Class<?> type;
+    
+    private String typeAlias;
     
     private String aggrTag;
 }
