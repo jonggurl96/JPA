@@ -32,6 +32,7 @@ public class QdslSortStrategy {
 }
 ```
 - JSON parameter
+> url: http://127.0.0.1:8080/qdslsort/avgage
 ```json
 {
   "nullHandling": "native",
