@@ -31,3 +31,13 @@ public class QdslSortStrategy {
 
 }
 ```
+- JSON parameter
+```json
+{
+  "nullHandling": "native",
+  "orders": [{
+    "kwrd": "avgAge",
+    "direction": "desc"
+  }]
+}
+```
