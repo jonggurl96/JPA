@@ -1,5 +1,6 @@
 package com.example.jpa.qdslsort;
 
+import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,10 @@ import lombok.Setter;
 public class QdslOrder {
     /**
      *
-     * QdslOrder - 정렬할 alias와 direction 정의
-     * <p>rootPath - Service에서 입력할 QClass</p>
+     * QdslOrder - 정렬할 alias와 direction 등 정의
+     * <p>kwrd - 정렬할 alias 명</p>
+     * <p>direction - 정렬 방향</p>
+     * <p>property - 정렬할 표현식</p>
      *
      * @author jonggurl
      * @version 1.0.0
@@ -23,9 +26,5 @@ public class QdslOrder {
     
     private String direction;
     
-    private Class<?> type;
-    
-    private String typeAlias;
-    
-    private String aggrTag;
+    private ComparableExpressionBase<?> property;
 }

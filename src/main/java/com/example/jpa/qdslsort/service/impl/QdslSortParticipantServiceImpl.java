@@ -2,6 +2,7 @@ package com.example.jpa.qdslsort.service.impl;
 
 import com.example.jpa.domain.*;
 import com.example.jpa.dto.querydsl.ParticipantAvgAgeDto;
+import com.example.jpa.qdslsort.QdslOrder;
 import com.example.jpa.qdslsort.QdslSortStrategy;
 import com.example.jpa.qdslsort.service.QdslSortParticipantService;
 import com.querydsl.core.types.Projections;
@@ -33,20 +34,12 @@ public class QdslSortParticipantServiceImpl implements QdslSortParticipantServic
     @Override
     public Page<ParticipantAvgAgeDto> getSortedAvgAge(Pageable pageable, QdslSortStrategy qdslSortStrategy) throws Exception {
         QParticipant participant = QParticipant.participant;
-        
-        qdslSortStrategy.getOrders().forEach(order -> {
+    
+        for(QdslOrder order : qdslSortStrategy.getOrders()) {
             if(order.getKwrd().equalsIgnoreCase("avgage")) {
-                order.setType(Participant.class);
-                order.setTypeAlias("participant");
-                order.setKwrd("participantDigit.age");
-                order.setAggrTag("avg");
+                order.setProperty(participant.participantDigit.age.avg());
             }
-            else {
-                order.setType(Participant.class);
-                order.setTypeAlias("participant");
-                order.setKwrd("contestName");
-            }
-        });
+        }
     
         List<ParticipantAvgAgeDto> content = qf.select(Projections.constructor(ParticipantAvgAgeDto.class,
                         participant.contestName.name.as("contestName"),
