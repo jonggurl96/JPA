@@ -285,4 +285,4 @@ Projections.fields(DTO.class, ...)
 | 지원하지 않는 메서드는 native query를 사용해야 함                | 대부분은 지원하나 from절 조인 등 불가능한 기능이 일부 있음 |
 
 # Sort
-- [동적 Sorting, Paging 구현](src/main/java/com/example/jpa/sort/README.md)
+- [동적 Sorting, Paging 구현](src/main/java/com/example/jpa/qdslsort/README.md)
